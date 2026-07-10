@@ -10,19 +10,23 @@
 // The cryptography lives entirely in github.com/go-eyaml/eyaml; this package is
 // the thin, hiera-facing layer on top of it:
 //
-//   - a [Config]/[New] pair that builds a [Backend] from PEM key material,
-//     supplied either inline (PublicKeyPEM/PrivateKeyPEM) or by path through an
-//     injectable [FS] seam (PublicKeyPath/PrivateKeyPath) so callers and tests
-//     never need real files;
-//   - [Backend.EncryptString] / [Backend.DecryptString] for single scalars,
-//     and [Backend.DecryptValue] to walk a decoded value tree decrypting every
-//     ENC[...] token it finds (block and inline string forms alike);
+//   - a [Config]/[New] pair that builds a [Backend] from pkcs7 PEM material
+//     and/or gpg OpenPGP keyrings, supplied either inline
+//     (PublicKeyPEM/PrivateKeyPEM, GPGPublicKeyRing/GPGPrivateKeyRing) or by
+//     path through an injectable [FS] seam so callers and tests never need real
+//     files;
+//   - [Backend.EncryptString] / [Backend.DecryptString] for single scalars
+//     ([Backend.EncryptStringWith] selects the scheme; DecryptString dispatches
+//     on the token's scheme), and [Backend.DecryptValue] to walk a decoded
+//     value tree decrypting every ENC[...] token it finds (block and inline
+//     string forms alike);
 //   - [Backend.DataHash], a func(data []byte, path string) (map[string]any,
 //     error) that YAML-parses a data file and decrypts it, matching the
 //     signature go-hiera's Hiera.RegisterDataHash expects;
 //   - [Backend.Register], which registers DataHash under the name "eyaml" on a
 //     *hiera.Hiera so a hierarchy level can select "data_hash: eyaml".
 //
-// Only the pkcs7 scheme is supported, inherited from go-eyaml; the hiera-eyaml
-// gpg encryptor is deferred there and therefore here too.
+// Both hiera-eyaml encryptors are supported, inherited from go-eyaml: pkcs7
+// (ENC[PKCS7,...]) and gpg (ENC[GPG,...]). A single data file may mix them;
+// DataHash decrypts each scalar with the encryptor its token names.
 package hieraeyaml

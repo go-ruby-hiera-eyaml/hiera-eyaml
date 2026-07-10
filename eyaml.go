@@ -26,74 +26,155 @@ type osFS struct{}
 
 func (osFS) ReadFile(name string) ([]byte, error) { return os.ReadFile(name) }
 
-// Config configures a [Backend]. Key material is the RSA private key and the
-// matching X.509 certificate (hiera-eyaml's "public key"). Supply either the
-// inline PEM fields or the *Path fields; inline PEM wins when both are set.
-// Provide only the certificate for an encrypt-only backend, only the private
-// key for a decrypt-only backend, or both for round trips.
+// Config configures a [Backend]. It carries key material for either or both of
+// hiera-eyaml's encryptors:
+//
+//   - pkcs7: the RSA private key and matching X.509 certificate (hiera-eyaml's
+//     "public key"), via the PublicKey*/PrivateKey* fields;
+//   - gpg: OpenPGP recipient and secret keyrings (armored or binary), via the
+//     GPG* fields, with an optional GPGPassphrase for a protected secret key.
+//
+// For each scheme, supply either the inline field or the *Path field; the
+// inline value wins when both are set, and *Path fields are read through FS.
+// Provide only the public half for an encrypt-only backend, only the secret
+// half for a decrypt-only backend, or both for round trips. At least one scheme
+// must be configured.
 type Config struct {
-	// PublicKeyPEM / PrivateKeyPEM are inline PEM blocks.
+	// PublicKeyPEM / PrivateKeyPEM are inline pkcs7 PEM blocks.
 	PublicKeyPEM  []byte
 	PrivateKeyPEM []byte
 	// PublicKeyPath / PrivateKeyPath are read through FS when the matching
-	// inline field is empty.
+	// inline pkcs7 field is empty.
 	PublicKeyPath  string
 	PrivateKeyPath string
+
+	// GPGPublicKeyRing / GPGPrivateKeyRing are inline OpenPGP keyrings
+	// (armored or binary).
+	GPGPublicKeyRing  []byte
+	GPGPrivateKeyRing []byte
+	// GPGPublicKeyRingPath / GPGPrivateKeyRingPath are read through FS when
+	// the matching inline gpg field is empty.
+	GPGPublicKeyRingPath  string
+	GPGPrivateKeyRingPath string
+	// GPGPassphrase unlocks a passphrase-protected gpg secret key; nil if
+	// none.
+	GPGPassphrase []byte
+
 	// FS overrides the file-access seam (defaults to the OS filesystem).
 	FS FS
 }
 
-// Backend decrypts and encrypts eyaml data. Construct one with [New].
+// Backend decrypts and encrypts eyaml data across the configured schemes.
+// Construct one with [New].
 type Backend struct {
-	enc *eyaml.PKCS7
+	// byScheme maps a token scheme label ("PKCS7", "GPG") to its encryptor,
+	// so DecryptString can dispatch on the scheme named in each token.
+	byScheme map[string]eyaml.Encryptor
+	// def is the encryptor EncryptString uses (pkcs7 when configured, else
+	// gpg), mirroring hiera-eyaml's default encrypt behaviour.
+	def eyaml.Encryptor
+}
+
+// resolve returns the inline bytes when present, else reads path through fsys
+// (when path is set), else nil.
+func resolve(fsys FS, inline []byte, path, what string) ([]byte, error) {
+	if len(inline) > 0 {
+		return inline, nil
+	}
+	if path == "" {
+		return nil, nil
+	}
+	b, err := fsys.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf("hiera-eyaml: read %s: %w", what, err)
+	}
+	return b, nil
 }
 
 // New builds a [Backend] from cfg. It errors if a configured path cannot be
-// read, if the PEM material is invalid, or if no key material is supplied at
+// read, if the key material is invalid, or if no key material is supplied at
 // all.
 func New(cfg Config) (*Backend, error) {
 	fsys := cfg.FS
 	if fsys == nil {
 		fsys = osFS{}
 	}
-	certPEM := cfg.PublicKeyPEM
-	if len(certPEM) == 0 && cfg.PublicKeyPath != "" {
-		b, err := fsys.ReadFile(cfg.PublicKeyPath)
-		if err != nil {
-			return nil, fmt.Errorf("hiera-eyaml: read certificate: %w", err)
-		}
-		certPEM = b
-	}
-	keyPEM := cfg.PrivateKeyPEM
-	if len(keyPEM) == 0 && cfg.PrivateKeyPath != "" {
-		b, err := fsys.ReadFile(cfg.PrivateKeyPath)
-		if err != nil {
-			return nil, fmt.Errorf("hiera-eyaml: read private key: %w", err)
-		}
-		keyPEM = b
-	}
-	if len(certPEM) == 0 && len(keyPEM) == 0 {
-		return nil, errors.New("hiera-eyaml: no key material configured")
-	}
-	p, err := eyaml.NewPKCS7(certPEM, keyPEM)
+	b := &Backend{byScheme: map[string]eyaml.Encryptor{}}
+
+	certPEM, err := resolve(fsys, cfg.PublicKeyPEM, cfg.PublicKeyPath, "certificate")
 	if err != nil {
 		return nil, err
 	}
-	return &Backend{enc: p}, nil
+	keyPEM, err := resolve(fsys, cfg.PrivateKeyPEM, cfg.PrivateKeyPath, "private key")
+	if err != nil {
+		return nil, err
+	}
+	if len(certPEM) > 0 || len(keyPEM) > 0 {
+		p, err := eyaml.NewPKCS7(certPEM, keyPEM)
+		if err != nil {
+			return nil, err
+		}
+		b.byScheme[p.Name()] = p
+		b.def = p
+	}
+
+	gpgPub, err := resolve(fsys, cfg.GPGPublicKeyRing, cfg.GPGPublicKeyRingPath, "gpg public keyring")
+	if err != nil {
+		return nil, err
+	}
+	gpgPriv, err := resolve(fsys, cfg.GPGPrivateKeyRing, cfg.GPGPrivateKeyRingPath, "gpg private keyring")
+	if err != nil {
+		return nil, err
+	}
+	if len(gpgPub) > 0 || len(gpgPriv) > 0 {
+		g, err := eyaml.NewGPG(gpgPub, gpgPriv, cfg.GPGPassphrase)
+		if err != nil {
+			return nil, err
+		}
+		b.byScheme[g.Name()] = g
+		if b.def == nil {
+			b.def = g
+		}
+	}
+
+	if b.def == nil {
+		return nil, errors.New("hiera-eyaml: no key material configured")
+	}
+	return b, nil
 }
 
-// EncryptString seals s into an ENC[PKCS7,...] token.
+// EncryptString seals s with the default scheme (pkcs7 when configured, else
+// gpg) and returns its ENC[...] token.
 func (b *Backend) EncryptString(s string) (string, error) {
-	return eyaml.Encrypt(b.enc, []byte(s))
+	return eyaml.Encrypt(b.def, []byte(s))
 }
 
-// DecryptString decrypts s when it is an ENC[...] token and returns it verbatim
-// otherwise, so plaintext scalars pass through unchanged.
+// EncryptStringWith seals s with the named scheme ("PKCS7" or "GPG"), erroring
+// when that scheme is not configured.
+func (b *Backend) EncryptStringWith(scheme, s string) (string, error) {
+	enc, ok := b.byScheme[scheme]
+	if !ok {
+		return "", fmt.Errorf("hiera-eyaml: scheme %q is not configured", scheme)
+	}
+	return eyaml.Encrypt(enc, []byte(s))
+}
+
+// DecryptString decrypts s when it is an ENC[...] token, dispatching on the
+// token's scheme, and returns it verbatim otherwise so plaintext scalars pass
+// through unchanged.
 func (b *Backend) DecryptString(s string) (string, error) {
 	if !eyaml.IsToken(s) {
 		return s, nil
 	}
-	pt, err := eyaml.Decrypt(b.enc, s)
+	scheme, _, err := eyaml.ParseToken(s)
+	if err != nil {
+		return "", err
+	}
+	enc, ok := b.byScheme[scheme]
+	if !ok {
+		return "", fmt.Errorf("hiera-eyaml: no backend configured for scheme %q", scheme)
+	}
+	pt, err := eyaml.Decrypt(enc, s)
 	if err != nil {
 		return "", err
 	}
