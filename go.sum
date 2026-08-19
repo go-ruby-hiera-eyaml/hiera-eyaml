@@ -8,6 +8,8 @@ github.com/go-hiera/hiera v0.0.0-20260708051558-73bff6edd0e9 h1:SydVW8z9lhzfLFvL
 github.com/go-hiera/hiera v0.0.0-20260708051558-73bff6edd0e9/go.mod h1:Xsrq+9d6EzW6Ju6DyJpIDDj4CYGka5ZAOWlBbQOOE5k=
 github.com/go-ruby-yaml/yaml v0.0.0-20260706120500-56d458798003 h1:SJ9mY8e11Lv0MbTh9CSxYMhY4AyaDHRmc3mYE+WQOQM=
 github.com/go-ruby-yaml/yaml v0.0.0-20260706120500-56d458798003/go.mod h1:HtbQgnZpSTJBAhPg1jOKgHycZl3tXgf9ZdOu4dnHWjQ=
+github.com/go-ruby-yaml/yaml v0.0.0-20260804155707-9c1d94ea2290 h1:sACndmsnAEQA24MuxXAjrIJGrZGTZEBU+c3pn9qAwWs=
+github.com/go-ruby-yaml/yaml v0.0.0-20260804155707-9c1d94ea2290/go.mod h1:HtbQgnZpSTJBAhPg1jOKgHycZl3tXgf9ZdOu4dnHWjQ=
 golang.org/x/crypto v0.41.0 h1:WKYxWedPGCTVVl5+WHSSrOBT0O8lx32+zxmHxijgXp4=
 golang.org/x/crypto v0.41.0/go.mod h1:pO5AFd7FA68rFak7rOAGVuygIISepHftHnr8dr6+sUc=
 golang.org/x/sys v0.35.0 h1:vz1N37gP5bs89s7He8XuIYXpyY0+QlsKmzipCbUtyxI=
