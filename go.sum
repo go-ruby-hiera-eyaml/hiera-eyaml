@@ -8,6 +8,8 @@ github.com/go-eyaml/eyaml v0.1.1-0.20260805203847-0b342ba366df h1:lXFhG7qrWOXgEk
 github.com/go-eyaml/eyaml v0.1.1-0.20260805203847-0b342ba366df/go.mod h1:qf4FGeUyDbvwlzCd2XgGc3NNBYV6I/bOSHdn/cfyB14=
 github.com/go-hiera/hiera v0.0.0-20260708051558-73bff6edd0e9 h1:SydVW8z9lhzfLFvLTsaUPoNmStmdp/09DmI7Vwxz9QE=
 github.com/go-hiera/hiera v0.0.0-20260708051558-73bff6edd0e9/go.mod h1:Xsrq+9d6EzW6Ju6DyJpIDDj4CYGka5ZAOWlBbQOOE5k=
+github.com/go-hiera/hiera v0.0.0-20260830144306-f9304f6bec92 h1:eyAunbBKGExaT/qWTpapYsBw4lvXApxMixxGs+wek6k=
+github.com/go-hiera/hiera v0.0.0-20260830144306-f9304f6bec92/go.mod h1:Xsrq+9d6EzW6Ju6DyJpIDDj4CYGka5ZAOWlBbQOOE5k=
 github.com/go-ruby-yaml/yaml v0.0.0-20260706120500-56d458798003 h1:SJ9mY8e11Lv0MbTh9CSxYMhY4AyaDHRmc3mYE+WQOQM=
 github.com/go-ruby-yaml/yaml v0.0.0-20260706120500-56d458798003/go.mod h1:HtbQgnZpSTJBAhPg1jOKgHycZl3tXgf9ZdOu4dnHWjQ=
 github.com/go-ruby-yaml/yaml v0.0.0-20260804155707-9c1d94ea2290 h1:sACndmsnAEQA24MuxXAjrIJGrZGTZEBU+c3pn9qAwWs=
