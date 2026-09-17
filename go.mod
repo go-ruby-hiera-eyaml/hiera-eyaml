@@ -6,7 +6,7 @@ require (
 	github.com/ProtonMail/go-crypto v1.4.1
 	github.com/go-eyaml/eyaml v0.1.1-0.20260830120938-4be866f56944
 	github.com/go-hiera/hiera v0.0.0-20260830144306-f9304f6bec92
-	github.com/go-ruby-yaml/yaml v0.0.0-20260804155707-9c1d94ea2290
+	github.com/go-ruby-yaml/yaml v0.0.0-20260916104302-910ced2db1c7
 )
 
 require (
