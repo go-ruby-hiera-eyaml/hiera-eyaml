@@ -2,6 +2,8 @@ github.com/ProtonMail/go-crypto v1.4.1 h1:9RfcZHqEQUvP8RzecWEUafnZVtEvrBVL9BiF67
 github.com/ProtonMail/go-crypto v1.4.1/go.mod h1:e1OaTyu5SYVrO9gKOEhTc+5UcXtTUa+P3uLudwcgPqo=
 github.com/ProtonMail/go-crypto v1.5.0 h1:sKmuvjOgsnrtpMvZ+84MCnTJCpjxZ1qCFn076lz1yT0=
 github.com/ProtonMail/go-crypto v1.5.0/go.mod h1:/RaSu30DaKO4RY+XdV/ACcCcZkGr7AhUIduq5sjzzCo=
+github.com/ProtonMail/go-crypto v1.5.1 h1:pTrLDQHyOT8y3DFYIpijgPBTw/7E2GLMimutvOlceuE=
+github.com/ProtonMail/go-crypto v1.5.1/go.mod h1:/RaSu30DaKO4RY+XdV/ACcCcZkGr7AhUIduq5sjzzCo=
 github.com/cloudflare/circl v1.6.2 h1:hL7VBpHHKzrV5WTfHCaBsgx/HGbBYlgrwvNXEVDYYsQ=
 github.com/cloudflare/circl v1.6.2/go.mod h1:2eXP6Qfat4O/Yhh8BznvKnJ+uzEoTQ6jVKJRn81BiS4=
 github.com/cloudflare/circl v1.6.3 h1:9GPOhQGF9MCYUeXyMYlqTR6a5gTrgR/fBLXvUgtVcg8=
@@ -12,6 +14,8 @@ github.com/go-eyaml/eyaml v0.1.1-0.20260805203847-0b342ba366df h1:lXFhG7qrWOXgEk
 github.com/go-eyaml/eyaml v0.1.1-0.20260805203847-0b342ba366df/go.mod h1:qf4FGeUyDbvwlzCd2XgGc3NNBYV6I/bOSHdn/cfyB14=
 github.com/go-eyaml/eyaml v0.1.1-0.20260830120938-4be866f56944 h1:LVG8uWebd8BTvVL1UvAkvhJKV3lEQy+lVvjkiTOYRwU=
 github.com/go-eyaml/eyaml v0.1.1-0.20260830120938-4be866f56944/go.mod h1:qf4FGeUyDbvwlzCd2XgGc3NNBYV6I/bOSHdn/cfyB14=
+github.com/go-eyaml/eyaml v0.1.1-0.20260923203545-389d6bec6dbf h1:Z3+qJ8bCtDKziwFm/m4PaHSaAyuPRtOg0jS9JcDjJTc=
+github.com/go-eyaml/eyaml v0.1.1-0.20260923203545-389d6bec6dbf/go.mod h1:UzXog8WRhLoa29jMb5P5ACi9yC+7nbupHH9f2BgbmXw=
 github.com/go-hiera/hiera v0.0.0-20260708051558-73bff6edd0e9 h1:SydVW8z9lhzfLFvLTsaUPoNmStmdp/09DmI7Vwxz9QE=
 github.com/go-hiera/hiera v0.0.0-20260708051558-73bff6edd0e9/go.mod h1:Xsrq+9d6EzW6Ju6DyJpIDDj4CYGka5ZAOWlBbQOOE5k=
 github.com/go-hiera/hiera v0.0.0-20260830144306-f9304f6bec92 h1:eyAunbBKGExaT/qWTpapYsBw4lvXApxMixxGs+wek6k=
