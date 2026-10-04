@@ -1,6 +1,6 @@
 module github.com/go-ruby-hiera-eyaml/hiera-eyaml
 
-go 1.26.4
+go 1.27.1
 
 require (
 	github.com/ProtonMail/go-crypto v1.5.1
