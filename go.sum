@@ -24,6 +24,8 @@ github.com/go-ruby-yaml/yaml v0.0.0-20260804155707-9c1d94ea2290 h1:sACndmsnAEQA2
 github.com/go-ruby-yaml/yaml v0.0.0-20260804155707-9c1d94ea2290/go.mod h1:HtbQgnZpSTJBAhPg1jOKgHycZl3tXgf9ZdOu4dnHWjQ=
 github.com/go-ruby-yaml/yaml v0.0.0-20260916104302-910ced2db1c7 h1:0p98W8xQ9WMGipkUVYZcgqvfVED1pEBk4IMjmjAej2s=
 github.com/go-ruby-yaml/yaml v0.0.0-20260916104302-910ced2db1c7/go.mod h1:HtbQgnZpSTJBAhPg1jOKgHycZl3tXgf9ZdOu4dnHWjQ=
+github.com/go-ruby-yaml/yaml v0.0.0-20261005142316-b55f761c1a87 h1:oJCVfBLnJ8BTgdq+3ujIF8rxoFg4TO6HWcKgNGWgqNM=
+github.com/go-ruby-yaml/yaml v0.0.0-20261005142316-b55f761c1a87/go.mod h1:eGbQIhYT8k6DuOJYyo5WlV4itj/qiCPRy5ZsdhRQRvI=
 golang.org/x/crypto v0.41.0 h1:WKYxWedPGCTVVl5+WHSSrOBT0O8lx32+zxmHxijgXp4=
 golang.org/x/crypto v0.41.0/go.mod h1:pO5AFd7FA68rFak7rOAGVuygIISepHftHnr8dr6+sUc=
 golang.org/x/sys v0.35.0 h1:vz1N37gP5bs89s7He8XuIYXpyY0+QlsKmzipCbUtyxI=
